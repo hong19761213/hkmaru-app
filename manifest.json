@@ -1,1 +1,39 @@
-{"name":"HK마루 현장관리","short_name":"HK마루","start_url":"./index.html","display":"standalone","background_color":"#f4f6f9","theme_color":"#102a5e"}
+{
+  "id": "./",
+  "name": "HK마루 현장관리",
+  "short_name": "HK마루",
+  "description": "HK마루 견적·계약·현장관리 앱",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#102a5e",
+  "lang": "ko-KR",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
