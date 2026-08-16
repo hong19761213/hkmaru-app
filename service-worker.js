@@ -1,5 +1,5 @@
-const VERSION='v4.54';
-const C='hkmaru-v4.54';
+const VERSION='v4.56';
+const C='hkmaru-v4.56';
 const A=['./','./index.html','./manifest.json','./assets/icon-192.png','./assets/icon-512.png','./assets/icon-maskable-192.png','./assets/icon-maskable-512.png','./assets/kc_mark.png'];
 
 self.addEventListener('install',e=>{
