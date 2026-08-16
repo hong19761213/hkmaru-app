@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#102a5e" />
-<title>HK마루 현장관리 v4.49</title>
+<title>HK마루 현장관리 v4.50</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="assets/icon-192.png?v=427" />
 <style>
@@ -1425,6 +1425,26 @@ body.document-preview-open .bottom,body.document-preview-open .safe-nav,body.doc
 }
 </style>
 
+
+<style id="v450SharpText">
+/* 미리보기/출력 글자 선명도 강화 */
+.doc-preview-a4,
+.doc-preview-a4 *,
+.pdf-export-root,
+.pdf-export-root *,
+.hk-estimate,
+.hk-estimate *,
+.contract-document,
+.contract-document *{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+.doc-preview-a4 img,
+.pdf-export-root img{
+  image-rendering:auto;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -2280,16 +2300,20 @@ async function pdfPageToJpeg(page,type){
  if(document.fonts?.ready)await document.fonts.ready;
  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
  const pageRect=page.getBoundingClientRect();
- const cssW=Math.max(1,pageRect.width||794),cssH=Math.max(1,pageRect.height||1123),SCALE=2;
+ const cssW=Math.max(1,pageRect.width||794),cssH=Math.max(1,pageRect.height||1123);
+ // 4x 고해상도: A4 기준 약 380dpi 수준으로 렌더링해 확대 시 글자 번짐을 크게 줄임
+ const SCALE=4;
  const canvas=document.createElement('canvas');
  canvas.width=Math.round(cssW*SCALE);canvas.height=Math.round(cssH*SCALE);
- const ctx=canvas.getContext('2d',{alpha:false});
+ const ctx=canvas.getContext('2d',{alpha:false,desynchronized:false});
  if(!ctx)throw new Error('PDF 캔버스를 만들 수 없습니다.');
+ ctx.imageSmoothingEnabled=true;
+ ctx.imageSmoothingQuality='high';
  ctx.scale(SCALE,SCALE);
  ctx.fillStyle='#fff';ctx.fillRect(0,0,cssW,cssH);
  await pdfPaintDom(ctx,page,page,pageRect);
  const blob=await new Promise((resolve,reject)=>{
-   try{canvas.toBlob(b=>b?resolve(b):reject(new Error('PDF 이미지 생성 실패')),'image/jpeg',.94);}
+   try{canvas.toBlob(b=>b?resolve(b):reject(new Error('PDF 이미지 생성 실패')),'image/jpeg',.995);}
    catch(e){reject(e);}
  });
  return {blob,width:canvas.width,height:canvas.height};
@@ -2327,7 +2351,7 @@ async function buildRecordPdf(type,x){
    }
    const jpgPages=[];
    for(let i=0;i<pages.length;i++){
-     showNavToast(`PDF 생성 중 ${i+1}/${pages.length}`);
+     showNavToast(`고화질 PDF 생성 중 ${i+1}/${pages.length}`);
      jpgPages.push(await pdfPageToJpeg(pages[i],type));
    }
    const blob=await makePdfFromJpegBlobs(jpgPages);
@@ -2342,7 +2366,7 @@ async function shareDocumentPdf(type,id,target){
  if(!x){alert('저장된 문서를 찾지 못했습니다.');return;}
  pdfShareBusy=true;
  try{
-   showNavToast('PDF 파일을 만드는 중입니다.');
+   showNavToast('고화질 PDF 파일을 만드는 중입니다.');
    const d=await buildRecordPdf(type,x);
    const targetName=target==='sms'?'메시지':'카카오톡';
    if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[d.file]}))){
